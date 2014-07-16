@@ -8,7 +8,7 @@ REQUIREMENTS
 
 To run this sample code, you'll need to install the following libraries:
 
-- Tweepy (https://github.com/tweepy/tweepy)
+- Tweepy: [https://github.com/tweepy/tweepy](https://github.com/tweepy/tweepy)
 
 GETTING STARTED
 ---
