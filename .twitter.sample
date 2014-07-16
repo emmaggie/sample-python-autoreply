@@ -1,0 +1,11 @@
+[apikey]
+key = your_api_key
+secret = your_api_secret
+
+[token]
+token = your_access_token
+secret = your_access_secret
+
+[app]
+rule = #hello @AccountOwnerOfApp
+screenname = @AccountOwnerOfApp
