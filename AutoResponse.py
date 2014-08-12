@@ -42,6 +42,7 @@ class ReplyToTweet(StreamListener):
 
             replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
 
+            #check if repsonse is over 140 char
             if len(replyText) > 140:
                 replyText = replyText[0:137] + '...'
 
