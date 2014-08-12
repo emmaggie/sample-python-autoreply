@@ -29,16 +29,17 @@ class ReplyToTweet(StreamListener):
 
     def on_data(self, data):
 
-        jsonData = json.loads(data.strip())
+        tweet = json.loads(data.strip())
         
-        retweeted = jsonData.get('retweeted')
-        in_reply_to_user_id = jsonData.get('in_reply_to_user_id_str')
+        retweeted = tweet.get('retweeted', False)
+        from_self = tweet.get('user',{}).get('id_str','') == account_user_id
+        mentions_self = self.mentionsSelf(tweet)
 
-        if retweeted == False and in_reply_to_user_id == account_user_id:
+        if not retweeted and not from_self and mentions_self:
 
-            tweetId = jsonData.get('id_str')
-            screenName = jsonData.get('user').get('screen_name')
-            tweetText = jsonData.get('text')
+            tweetId = tweet.get('id_str')
+            screenName = tweet.get('user').get('screen_name')
+            tweetText = tweet.get('text')
 
             replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
 
@@ -57,6 +58,17 @@ class ReplyToTweet(StreamListener):
 
     def on_error(self, status):
         print status
+
+
+    def mentionsSelf(self, tweet):
+        result = False
+        user_mentions = tweet.get('entities',{}).get('user_mentions',{})
+
+        for user in user_mentions:
+            if user.get('id_str') == account_user_id:
+                result = True
+        
+        return result
 
 
 if __name__ == '__main__':
