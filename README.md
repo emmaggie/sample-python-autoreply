@@ -1,4 +1,4 @@
-python-autoreply
+sample-python-autoreply
 ===
 
 Simple auto-reply using Python and Tweepy. Replies with same Tweet text.
@@ -25,7 +25,9 @@ token = your_access_token
 secret = your_access_secret
 
 [app]
-rule = #hello @AccountOwnerOfApp
+rule = @AccountOwnerOfApp
+account_screen_name = AccountOwnerOfApp
+account_user_id = UserIdOfAccountOwner
 
 ```
 
