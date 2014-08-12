@@ -17,6 +17,7 @@ access_token = config.get('token', 'token')
 access_token_secret = config.get('token', 'secret')
 stream_rule = config.get('app', 'rule')
 account_screen_name = config.get('app', 'account_screen_name').lower() 
+account_user_id = config.get('app', 'account_user_id')
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -29,40 +30,28 @@ class ReplyToTweet(StreamListener):
     def on_data(self, data):
 
         jsonData = json.loads(data.strip())
+        
+        retweeted = jsonData.get('retweeted')
+        in_reply_to_user_id = jsonData.get('in_reply_to_user_id_str')
 
-        # preamble - https://dev.twitter.com/docs/streaming-apis/messages#Friends_lists_friends
-        friends = jsonData.get('friends')
-        if friends:
-            print 'Preamble received.'
-            return
+        if retweeted == False and in_reply_to_user_id == account_user_id:
 
-        # deletes - deleting a Tweet will broadcast through the stream
-        delete = jsonData.get('friends')
-        if delete:
-            print 'Ignoring delete.'
-            return
+            tweetId = jsonData.get('id_str')
+            screenName = jsonData.get('user').get('screen_name')
+            tweetText = jsonData.get('text')
 
-        # ignore Tweets from the app owner account
-        screenName = jsonData.get('user').get('screen_name')
-        if screenName.lower() == account_screen_name:
-            print 'Ignoring my own Tweets.'
-            return
+            replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
 
-        tweetId = jsonData.get('id_str')
-        tweetText = jsonData.get('text')
+            if len(replyText) > 140:
+                replyText = replyText[0:137] + '...'
 
-        replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
+            print('Tweet ID: ' + tweetId)
+            print('From: ' + screenName)
+            print('Tweet Text: ' + tweetText)
+            print('Reply Text: ' + replyText)
 
-        if len(replyText) > 140:
-            replyText = replyText[0:137] + '...'
-
-        print('Tweet ID: ' + tweetId)
-        print('From: ' + screenName)
-        print('Tweet Text: ' + tweetText)
-        print('Reply Text: ' + replyText)
-
-        # If rate limited, the status posts should be queued up and sent on an interval
-        twitterApi.update_status(replyText, tweetId)
+            # If rate limited, the status posts should be queued up and sent on an interval
+            twitterApi.update_status(replyText, tweetId)
 
 
     def on_error(self, status):
