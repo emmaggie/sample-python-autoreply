@@ -9,7 +9,7 @@ To run this sample code, you'll need to install the following python libraries:
 - NLTK: [http://www.nltk.org/](http://www.nltk.org)
 
 
-GETTING STARTED
+Getting Started
 ---
 Create a [Twitter App](https://apps.twitter.com/).
 
@@ -42,3 +42,12 @@ Run the python script in the project directory:
 ```
 python AutoResponse.py
 ```
+
+Notes
+-----
+This is a very barebones code example to get you started. There are additional considerations you should account for in your application. Please familiarize yourself with the following to help you create the best experience for yourself and your users.
+
+[The Twitter Rules](https://support.twitter.com/articles/18311-the-twitter-rules)<br/>
+[Automation Rules & Best Practices](https://support.twitter.com/articles/76915)<br/>
+[API Rate Limiting](https://dev.twitter.com/docs/rate-limiting/1.1)
+
