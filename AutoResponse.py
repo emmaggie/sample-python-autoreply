@@ -28,17 +28,16 @@ chatbot = eliza.Chat(eliza.pairs)
 class ReplyToTweet(StreamListener):
 
     def on_data(self, data):
-
+        print data
         tweet = json.loads(data.strip())
         
-        retweeted = tweet.get('retweeted', False)
+        retweeted = tweet.get('retweeted')
         from_self = tweet.get('user',{}).get('id_str','') == account_user_id
-        mentions_self = self.mentionsSelf(tweet)
 
-        if not retweeted and not from_self and mentions_self:
+        if retweeted is not None and not retweeted and not from_self:
 
             tweetId = tweet.get('id_str')
-            screenName = tweet.get('user').get('screen_name')
+            screenName = tweet.get('user',{}).get('screen_name')
             tweetText = tweet.get('text')
 
             replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
@@ -55,23 +54,11 @@ class ReplyToTweet(StreamListener):
             # If rate limited, the status posts should be queued up and sent on an interval
             twitterApi.update_status(replyText, tweetId)
 
-
     def on_error(self, status):
         print status
-
-
-    def mentionsSelf(self, tweet):
-        result = False
-        user_mentions = tweet.get('entities',{}).get('user_mentions',{})
-
-        for user in user_mentions:
-            if user.get('id_str') == account_user_id:
-                result = True
-        
-        return result
 
 
 if __name__ == '__main__':
     r = ReplyToTweet()
     twitterStream = Stream(auth, r)
-    twitterStream.userstream(track=[stream_rule])
+    twitterStream.userstream(_with='user')
