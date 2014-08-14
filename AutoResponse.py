@@ -40,7 +40,9 @@ class ReplyToTweet(StreamListener):
             screenName = tweet.get('user',{}).get('screen_name')
             tweetText = tweet.get('text')
 
-            replyText = '@' + screenName + ' ' + chatbot.respond(tweetText)
+            chatResponse = chatbot.respond(tweetText)
+
+            replyText = '@' + screenName + ' ' + chatResponse
 
             #check if repsonse is over 140 char
             if len(replyText) > 140:
@@ -59,6 +61,6 @@ class ReplyToTweet(StreamListener):
 
 
 if __name__ == '__main__':
-    r = ReplyToTweet()
-    twitterStream = Stream(auth, r)
+    streamListener = ReplyToTweet()
+    twitterStream = Stream(auth, streamListener)
     twitterStream.userstream(_with='user')
