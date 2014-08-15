@@ -1,7 +1,7 @@
 sample-python-autoreply
 ===
 
-Simple auto-reply using Python and Tweepy. Replies with same Tweet text.
+Basic auto-reply application using Python, Tweepy and NLTK.
 
 To run this sample code, you'll need to install the following python libraries:
 
